@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify, send_file
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 from io import BytesIO
 
 app = Flask(__name__)
@@ -18,13 +19,26 @@ def start():
 
 @app.route('/plotGraph')
 def plotGraph():
-    fig = Figure()
-    ax = fig.subplots()
-    ax.plot([1, 2])
+    # x axis values
+    x = [1,2,3]
+    # corresponding y axis values
+    y = [2,4,1]
+    
+    # plotting the points 
+    plt.plot(x, y)
 
+    # Add labels and title if needed
+    plt.xlabel('X Label')
+    plt.ylabel('Y Label')
+    plt.title('Your Plot Title')
+
+    # Save the plot to a buffer
     img_buffer = BytesIO()
-    fig.savefig(img_buffer, format='png')
+    plt.savefig(img_buffer, format='png')
     img_buffer.seek(0)
 
-    fig.clf()
+    # Clear the current plot
+    plt.clf()
+
+    # Return the plot as an image
     return send_file(img_buffer, mimetype='image/png')
